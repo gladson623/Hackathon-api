@@ -1,48 +1,88 @@
-# API Node.js — Portal de Estágios UniALFA
+# Portal de Estágios UniALFA — API Node.js
 
-API RESTful desenvolvida em Node.js + TypeScript para o Portal de Estágios da UniALFA. Serve como camada intermediária entre o Front-end PHP, Back Office Java e o banco de dados MySQL.
+API RESTful desenvolvida em **Node.js + TypeScript** para o Portal de Estágios da UniALFA. O projeto foi criado durante o Hackathon do 3º período e funciona como a camada central do sistema, sendo responsável por controlar alunos, empresas, vagas, candidaturas, autenticação e notificações.
 
----
-
-## Problema e solução
-
-Alunos precisam encontrar vagas de estágio e acompanhar candidaturas, enquanto empresas
-precisam cadastrar e gerenciar suas oportunidades. A API centraliza essas operações e impede
-que os módulos PHP e Java acessem o banco de dados diretamente.
-
-## Objetivo
-
-Fornecer endpoints RESTful para vagas, candidaturas e notificações, aplicando validações,
-regras de negócio, persistência em MySQL e respostas JSON padronizadas.
+A API se comunica com o banco de dados MySQL e entrega os dados em formato JSON para os outros módulos do projeto, como o portal web do aluno, o painel da empresa e o back office institucional.
 
 ---
 
-## Stack
+## Descrição do Problema e da Solução
 
-- **Node.js** + **TypeScript**
-- **Express** — framework HTTP
-- **TypeORM** — ORM com suporte a migrations
-- **MySQL** — banco de dados
-- **Zod** — validação de schemas
-- **Helmet** + **CORS** — segurança e controle de acesso
+A UniALFA precisava de uma forma mais simples e organizada para conectar alunos que procuram estágio com empresas da região que possuem oportunidades disponíveis. Além disso, era necessário controlar cadastros, vagas, candidaturas e notificações de forma centralizada, sem depender de processos manuais ou informações espalhadas.
+
+A solução desenvolvida foi uma **API Node.js** para centralizar as regras de negócio do Portal de Estágios. Através dela, os outros sistemas conseguem cadastrar e consultar alunos, empresas, vagas e candidaturas sem acessar diretamente o banco de dados.
+
+A API também controla regras importantes, como aprovação ou bloqueio de empresas, validação de alunos aptos para estágio, criação de candidaturas e geração de notificações para acompanhamento do processo.
 
 ---
 
-## Instalação
+## Objetivos do Projeto
 
-### 1. Clone e instale as dependências
+- Criar uma API RESTful para o Portal de Estágios UniALFA;
+- Centralizar o acesso ao banco de dados MySQL;
+- Permitir cadastro, consulta, edição e exclusão de alunos, empresas, vagas e candidaturas;
+- Controlar o status das empresas: pendente, aprovada ou bloqueada;
+- Permitir que alunos aptos se candidatem às vagas disponíveis;
+- Gerar notificações relacionadas às candidaturas;
+- Padronizar as respostas da API em JSON;
+- Utilizar migrations e seeds para organizar a estrutura e os dados iniciais do banco;
+- Facilitar a integração com os módulos web e administrativo do projeto.
+
+---
+
+## Tecnologias e Ferramentas Utilizadas
+
+| Tecnologia/Ferramenta | Finalidade |
+|---|---|
+| Node.js | Ambiente de execução da API |
+| TypeScript | Organização e tipagem do código |
+| Express | Criação das rotas HTTP |
+| TypeORM | Integração com o banco e migrations |
+| MySQL | Banco de dados relacional |
+| Zod | Validação dos dados enviados nas requisições |
+| JWT | Autenticação por token |
+| Helmet | Segurança básica nos headers HTTP |
+| CORS | Permitir integração com outros módulos |
+| dotenv | Configuração por variáveis de ambiente |
+| Thunder Client | Testes manuais dos endpoints |
+| Git/GitHub | Controle de versão do projeto |
+
+---
+
+## Instruções para Instalação e Execução Local
+
+### Pré-requisitos
+
+Antes de executar o projeto, é necessário ter instalado:
+
+- Node.js;
+- npm;
+- MySQL;
+- Git;
+- Um cliente para testar requisições, como Thunder Client, Insomnia ou Postman.
+
+### 1. Clonar o repositório
+
+```bash
+git clone https://github.com/ffabricioo779/Hackathon-api.git
+cd Hackathon-api
+```
+
+### 2. Instalar as dependências
 
 ```bash
 npm install
 ```
 
-### 2. Configure as variáveis de ambiente
+### 3. Configurar o ambiente
+
+Crie o arquivo `.env` com base no `.env.example`:
 
 ```bash
 cp .env.example .env
 ```
 
-Edite o arquivo `.env` com as credenciais do seu banco MySQL:
+Exemplo de configuração:
 
 ```env
 PORT=3000
@@ -51,127 +91,148 @@ NODE_ENV=development
 DB_HOST=localhost
 DB_PORT=3306
 DB_USER=root
-DB_PASS=sua_senha
+DB_PASS=
 DB_NAME=portal_estagios
+JWT_SECRET=sua_chave_secreta
 ```
 
-### 3. Crie o banco de dados
+### 4. Criar o banco de dados
+
+No MySQL, execute:
 
 ```sql
 CREATE DATABASE portal_estagios CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
-### 4. Execute as migrations
+### 5. Rodar as migrations
 
 ```bash
 npm run migration:run
 ```
 
-### 5. Execute os seeds (opcional)
+### 6. Rodar os seeds
 
 ```bash
 npm run seed
 ```
 
-### 6. Inicie o servidor em modo desenvolvimento
+### 7. Iniciar a API
 
 ```bash
 npm run dev
 ```
 
+A API ficará disponível em:
+
+```txt
+http://localhost:3000
+```
+
 ---
 
-## Scripts disponíveis
+## Scripts Disponíveis
 
-| Script | Descrição |
+| Script | Finalidade |
 |---|---|
-| `npm run dev` | Inicia em modo desenvolvimento com hot-reload |
+| `npm run dev` | Inicia a API em modo desenvolvimento |
 | `npm run migration:run` | Executa as migrations pendentes |
 | `npm run migration:revert` | Reverte a última migration |
-| `npm run migration:show` | Exibe migrations executadas e pendentes |
-| `npm run migration:generate` | Gera nova migration baseada nas entidades |
-| `npm run seed` | Popula o banco com dados de teste |
+| `npm run migration:show` | Mostra as migrations executadas e pendentes |
+| `npm run migration:generate` | Gera uma nova migration |
+| `npm run seed` | Popula o banco com dados iniciais |
 
 ---
 
-## Estrutura do projeto
+## Estrutura do Projeto
 
+```txt
+Hackathon-api/
+├── src/
+│   ├── config/              # Configuração do TypeORM e banco de dados
+│   ├── controllers/         # Recebem as requisições e retornam respostas
+│   ├── entities/            # Entidades do banco de dados
+│   ├── errors/              # Classe de erro personalizada
+│   ├── middlewares/         # Autenticação e validação
+│   ├── migrations/          # Criação e alteração das tabelas
+│   ├── routes/              # Definição das rotas da API
+│   ├── schemas/             # Validações com Zod
+│   ├── seeds/               # Dados iniciais para teste
+│   ├── services/            # Regras de negócio
+│   ├── utils/               # Funções auxiliares
+│   └── server.ts            # Arquivo principal da aplicação
+├── .env.example             # Exemplo de configuração
+├── package.json             # Dependências e scripts
+├── tsconfig.json            # Configuração do TypeScript
+└── README.md                # Documentação do projeto
 ```
-src/
-├── config/
-│   └── data-source.ts       # Configuração do TypeORM/MySQL
-├── controllers/             # Camada de controle (req/res)
-├── services/                # Regras de negócio
-├── entities/                # Entidades TypeORM
-├── routes/                  # Definição das rotas
-├── middlewares/             # Error handler, validação
-├── schemas/                 # Schemas Zod
-├── errors/                  # Classe AppError
-├── migrations/              # Migrations do banco
-├── seeds/                   # Dados de teste
-└── server.ts                # Entry point
-```
 
 ---
 
-## Endpoints
+## Principais Endpoints
 
-### Alunos — `/api/alunos`
-
-| Método | Rota | Descrição |
-|---|---|---|
-| POST | `/api/alunos` | Cadastrar aluno |
-| GET | `/api/alunos` | Listar todos os alunos |
-| GET | `/api/alunos/:id` | Buscar aluno por ID |
-| PUT | `/api/alunos/:id` | Atualizar aluno |
-| DELETE | `/api/alunos/:id` | Remover aluno |
-
-### Empresas — `/api/empresas`
+### Autenticação
 
 | Método | Rota | Descrição |
 |---|---|---|
-| POST | `/api/empresas` | Cadastrar empresa |
-| GET | `/api/empresas` | Listar todas as empresas |
-| GET | `/api/empresas/:id` | Buscar empresa por ID |
-| PUT | `/api/empresas/:id` | Atualizar empresa |
-| DELETE | `/api/empresas/:id` | Remover empresa |
-| PATCH | `/api/empresas/:id/aprovar` | Aprovar empresa |
-| PATCH | `/api/empresas/:id/bloquear` | Bloquear empresa |
+| POST | `/api/login` | Realiza login e retorna token JWT |
 
-### Vagas — `/api/vagas`
+### Alunos
 
 | Método | Rota | Descrição |
 |---|---|---|
-| POST | `/api/vagas` | Criar vaga |
-| GET | `/api/vagas` | Listar todas as vagas |
-| GET | `/api/vagas/ativas` | Listar vagas ativas |
-| GET | `/api/vagas/empresa/:empresaId` | Listar vagas por empresa |
-| GET | `/api/vagas/:id` | Buscar vaga por ID |
-| PUT | `/api/vagas/:id` | Atualizar vaga |
-| DELETE | `/api/vagas/:id` | Remover vaga |
+| POST | `/api/alunos` | Cadastra um aluno |
+| GET | `/api/alunos` | Lista os alunos |
+| GET | `/api/alunos/:id` | Busca aluno por ID |
+| PUT | `/api/alunos/:id` | Atualiza dados do aluno |
+| DELETE | `/api/alunos/:id` | Remove um aluno |
 
-### Candidaturas — `/api/candidaturas`
+### Empresas
 
 | Método | Rota | Descrição |
 |---|---|---|
-| POST | `/api/candidaturas` | Realizar candidatura |
-| GET | `/api/candidaturas` | Listar todas as candidaturas |
-| GET | `/api/candidaturas/:id` | Buscar candidatura por ID |
-| PUT | `/api/candidaturas/:id` | Atualizar status da candidatura |
-| DELETE | `/api/candidaturas/:id` | Remover candidatura |
+| POST | `/api/empresas` | Cadastra uma empresa |
+| GET | `/api/empresas` | Lista as empresas |
+| GET | `/api/empresas/:id` | Busca empresa por ID |
+| PUT | `/api/empresas/:id` | Atualiza uma empresa |
+| DELETE | `/api/empresas/:id` | Remove uma empresa |
+| PATCH | `/api/empresas/:id/aprovar` | Aprova uma empresa |
+| PATCH | `/api/empresas/:id/bloquear` | Bloqueia uma empresa |
 
-### Notificações — `/api/notificacoes`
+### Vagas
 
 | Método | Rota | Descrição |
 |---|---|---|
-| GET | `/api/notificacoes` | Listar notificações (`?alunoId=1` opcional) |
-| PATCH | `/api/notificacoes/:id/lida` | Marcar notificação como lida |
+| POST | `/api/vagas` | Cria uma vaga |
+| GET | `/api/vagas` | Lista as vagas |
+| GET | `/api/vagas/:id` | Busca vaga por ID |
+| PUT | `/api/vagas/:id` | Atualiza uma vaga |
+| DELETE | `/api/vagas/:id` | Remove uma vaga |
+
+### Candidaturas
+
+| Método | Rota | Descrição |
+|---|---|---|
+| POST | `/api/candidaturas` | Cria uma candidatura |
+| GET | `/api/candidaturas` | Lista as candidaturas |
+| GET | `/api/candidaturas/:id` | Busca candidatura por ID |
+| PUT | `/api/candidaturas/:id` | Atualiza status ou observação |
+| DELETE | `/api/candidaturas/:id` | Remove uma candidatura |
+
+### Notificações
+
+| Método | Rota | Descrição |
+|---|---|---|
+| GET | `/api/notificacoes` | Lista notificações do aluno |
+| PATCH | `/api/notificacoes/:id/lida` | Marca uma notificação como lida |
 
 ---
 
-## Padrão de resposta
+## Padrão de Resposta
 
-**Sucesso:**
+As respostas da API seguem um padrão em JSON.
+
+Exemplo de sucesso:
+
 ```json
 {
   "success": true,
@@ -179,7 +240,8 @@ src/
 }
 ```
 
-**Erro:**
+Exemplo de erro:
+
 ```json
 {
   "success": false,
@@ -189,56 +251,184 @@ src/
 
 ---
 
-## Regras de negócio
+## Regras de Negócio Implementadas
 
-- Empresa com status `PENDENTE` ou `BLOQUEADA` não pode criar vagas
-- Vaga com status `ENCERRADA` não aceita novas candidaturas
-- Aluno não pode se candidatar duas vezes à mesma vaga
-- Aluno deve ter `aptoEstagio = true` para se candidatar
-- Ao realizar uma candidatura, o aluno recebe uma notificação automática
-- Ao atualizar o status de uma candidatura, o aluno recebe uma notificação
-
----
-
-## Enums
-
-**Empresa — status:** `PENDENTE` | `APROVADA` | `BLOQUEADA`
-
-**Vaga — modalidade:** `PRESENCIAL` | `REMOTO` | `HIBRIDO`
-
-**Vaga — status:** `ATIVA` | `ENCERRADA`
-
-**Candidatura — status:** `PENDENTE` | `EM_ANALISE` | `APROVADA` | `REPROVADA`
+- Empresa cadastrada inicia com status `PENDENTE`;
+- Empresas pendentes ou bloqueadas não devem cadastrar vagas;
+- Apenas empresas aprovadas podem publicar vagas válidas;
+- Aluno precisa estar marcado como apto para se candidatar;
+- O aluno não pode se candidatar duas vezes à mesma vaga;
+- Toda candidatura inicia com status `PENDENTE`;
+- O status da candidatura pode ser atualizado conforme análise;
+- Notificações são geradas para acompanhar o andamento das candidaturas;
+- As entradas são validadas com Zod antes de salvar no banco.
 
 ---
 
-## Cobertura dos requisitos Node.js
+## Funcionalidades Implementadas
 
-| Requisito do Hackathon | Implementação |
-|---|---|
-| API RESTful | Express com rotas em `/api` |
-| Vagas | CRUD completo e listagem de vagas ativas ou por empresa |
-| Candidaturas | CRUD completo, validação de aluno e vaga |
-| Notificações | Criação automática e endpoint para listar e marcar como lida |
-| Banco relacional | MySQL com TypeORM |
-| Arquitetura modular | Rotas, controllers, services, entities e schemas separados |
-| Migrations | Estrutura do banco em `src/migrations` |
-| Seeds | Carga inicial em `src/seeds/seed.ts` |
-| Respostas JSON | Padrão `success`, `data` e `message` |
-| Códigos HTTP | 200, 201, 204, 400, 403, 404, 409 e 500 |
-| Validação | Schemas Zod nas operações de criação e atualização |
-| Tratamento de erros | Middleware global e resposta 404 para rotas inexistentes |
-| Integração PHP | CORS habilitado e acesso ao banco centralizado pela API |
+### Autenticação
+
+- Login de usuários;
+- Geração de token JWT;
+- Identificação do tipo de usuário logado.
+
+### Gestão de Alunos
+
+- Cadastro de aluno;
+- Listagem de alunos;
+- Busca por ID;
+- Atualização de dados;
+- Controle de aptidão para estágio.
+
+### Gestão de Empresas
+
+- Cadastro de empresa;
+- Listagem e consulta por ID;
+- Atualização cadastral;
+- Exclusão de empresa;
+- Aprovação e bloqueio de empresas.
+
+### Gestão de Vagas
+
+- Cadastro de vagas;
+- Listagem de vagas;
+- Associação da vaga com a empresa responsável;
+- Consulta das informações da vaga, como título, descrição, requisitos, bolsa e modalidade.
+
+### Gestão de Candidaturas
+
+- Criação de candidatura por aluno;
+- Listagem das candidaturas;
+- Relacionamento entre aluno e vaga;
+- Atualização de status e observações;
+- Exclusão de candidatura.
+
+### Notificações
+
+- Consulta de notificações;
+- Notificações relacionadas ao andamento das candidaturas.
 
 ---
 
-## Verificações realizadas
+## Integrantes da Equipe e Contribuições
 
-- Verificação estática do TypeScript com `npx tsc --noEmit`
-- Leitura das migrations com `npm run migration:show`
-- Conferência das rotas, schemas Zod, regras de negócio e respostas HTTP
+| Integrante | GitHub | Contribuições |
+|---|---|---|
+| Gladson Coronado | `@gladson623` | Estrutura inicial da API; organização em camadas; configuração Express/TypeScript; TypeORM; migrations; CRUD de alunos, empresas, vagas e notificações; autenticação; permissões; CORS e reforços de segurança |
+| Fabrício | `@ffabricioo779` | Implementação e testes do CRUD de candidaturas; apoio na reorganização das migrations; testes manuais dos endpoints; evidências de funcionamento no Thunder Client |
+| Gustavo Francisco | `@gustavofrancisc0` | Implementação de JWT; colaboração em Pull Requests; apoio em rotas, autenticação e integração das funcionalidades |
+| Gustavo Oliveira | `@gustavodemo901090-cmd` | Reforço de autenticação e permissões relacionadas ao aluno; ajustes de segurança e regras de acesso |
+| Thaina de Sá | `@Thaina-de-Sa` | Apoio na implementação do CRUD de alunos com validação Zod e integração com banco MySQL |
 
-## Integrantes e contribuições
+---
 
-Preencher esta seção com os nomes dos integrantes e as respectivas contribuições antes da
-entrega, conforme solicitado na parte de documentação do Hackathon.
+## Evidências de Testes e Funcionalidades
+
+As capturas de tela abaixo demonstram as principais funcionalidades da API em execução. Os testes foram feitos manualmente pelo **Thunder Client**, com a aplicação rodando localmente em `http://localhost:3000`.
+
+### Login do Aluno
+Teste da rota de autenticação, retornando o token JWT e os dados do usuário logado.
+
+![Login do Aluno](docs/evidencias/login-post-aluno.png)
+
+### Cadastro de Aluno
+Teste de criação de aluno, retornando `201 Created` e os dados cadastrados.
+
+![Cadastro de Aluno](docs/evidencias/post-cadastro-aluno.png)
+
+### Listagem de Alunos
+Teste de consulta dos alunos cadastrados, retornando `200 OK` e a lista em JSON.
+
+![Listagem de Alunos](docs/evidencias/get-listagem-alunos.png)
+
+### Atualização de Cadastro de Aluno
+Teste de atualização dos dados de um aluno pelo ID, retornando `200 OK`.
+
+![Atualização de Cadastro de Aluno](docs/evidencias/put-atualizacao-aluno.png)
+
+### Cadastro de Empresa
+Teste de criação de empresa, retornando `201 Created` e status inicial `PENDENTE`.
+
+![Cadastro de Empresa](docs/evidencias/post-cadastro-empresa.png)
+
+### Listagem de Empresas
+Teste de consulta das empresas cadastradas, retornando `200 OK`.
+
+![Listagem de Empresas](docs/evidencias/get-listagem-empresas.png)
+
+### Busca de Empresa por ID
+Teste de busca de uma empresa específica pelo ID informado na rota.
+
+![Busca de Empresa por ID](docs/evidencias/get-buscar-empresa-id.png)
+
+### Bloqueio de Empresa
+Teste da rota `PATCH`, alterando o status da empresa para `BLOQUEADA`.
+
+![Bloqueio de Empresa](docs/evidencias/patch-bloquear-empresa.png)
+
+### Aprovação de Empresa
+Teste da rota `PATCH`, alterando o status da empresa para `APROVADA`.
+
+![Aprovação de Empresa](docs/evidencias/patch-aprovar-empresa.png)
+
+### Exclusão de Empresa
+Teste da rota `DELETE`, removendo uma empresa pelo ID e retornando `204 No Content`.
+
+![Exclusão de Empresa](docs/evidencias/delete-empresa.png)
+
+### Conferência da Empresa Removida
+Após a exclusão, a listagem foi consultada novamente para confirmar que a empresa não aparece mais no retorno.
+
+![Conferência da Empresa Removida](docs/evidencias/get-empresa-removida-listagem.png)
+
+### Listagem de Vagas
+Teste de consulta das vagas cadastradas, retornando os dados da vaga e da empresa vinculada.
+
+![Listagem de Vagas](docs/evidencias/get-listagem-vagas.png)
+
+### Criação de Candidatura
+Teste de candidatura de um aluno a uma vaga, retornando `201 Created` e status inicial `PENDENTE`.
+
+![Criação de Candidatura](docs/evidencias/post-candidatura.png)
+
+### Listagem de Candidaturas
+Teste de consulta das candidaturas, exibindo dados do aluno, da vaga e do status atual.
+
+![Listagem de Candidaturas](docs/evidencias/get-listagem-candidaturas.png)
+
+### Exclusão de Candidatura
+Teste da rota `DELETE`, removendo uma candidatura pelo ID e retornando `204 No Content`.
+
+![Exclusão de Candidatura](docs/evidencias/delete-candidatura.png)
+
+### Consulta de Notificações
+Teste de consulta das notificações disponíveis para acompanhamento das candidaturas.
+
+![Consulta de Notificações](docs/evidencias/get-notificacoes.png)
+
+Essas evidências demonstram que as principais rotas da API foram implementadas e testadas, incluindo autenticação, alunos, empresas, vagas, candidaturas e notificações.
+
+---
+
+## Organização e Boas Práticas
+
+O projeto foi organizado em camadas para separar melhor as responsabilidades:
+
+- **Routes:** definem os endpoints da API;
+- **Controllers:** recebem as requisições e retornam respostas;
+- **Services:** concentram as regras de negócio;
+- **Entities:** representam as tabelas do banco;
+- **Schemas:** validam os dados com Zod;
+- **Migrations:** controlam a estrutura do banco;
+- **Seeds:** criam dados iniciais para testes.
+
+Também foram aplicadas boas práticas como validação de dados, padronização de respostas JSON, tratamento de erros, uso de TypeScript e controle de versão com Git.
+
+---
+
+## Conclusão
+
+A API desenvolvida cumpre o papel de motor central do Portal de Estágios UniALFA. Ela permite integrar os módulos do sistema, centralizar o acesso ao banco de dados e gerenciar alunos, empresas, vagas, candidaturas e notificações de forma organizada.
+
+Com os testes realizados, foi possível validar as principais funcionalidades implementadas e confirmar que a API atende aos requisitos principais do Hackathon para o módulo Node.js.
